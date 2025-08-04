@@ -69,6 +69,7 @@ contract Lottery3D {
     // 用户购买彩票
     function buyTicket(uint256 round, uint256 number, uint256 amount) external payable {
         require(rounds[round].isOpen, "Round not open");
+        require(!rounds[round].isDrawn, "Round already drawn");
         require(block.timestamp <= rounds[round].deadline, "Round closed");
         require(number <= 999, "Invalid number");
         require(amount > 0, "Amount must be > 0");
@@ -92,6 +93,7 @@ contract Lottery3D {
 
         // 设置开奖结果
         rounds[round].isDrawn = true;
+        rounds[round].isOpen = false;
         rounds[round].winningNumber = winningNumber;
 
         emit RoundDrawn(round, winningNumber);
