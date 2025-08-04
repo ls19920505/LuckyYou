@@ -5,6 +5,8 @@ contract Lottery3D {
     // 管理员地址
     address public owner;
 
+    bool private locked;
+
     // 单注彩票价格
     uint256 public ticketPrice = 0.001 ether;
 
@@ -16,6 +18,13 @@ contract Lottery3D {
     modifier onlyOwner() {
         require(msg.sender == owner, "Only owner");
         _;
+    }
+
+    modifier nonReentrant() {
+        require(!locked, "ReentrancyGuard: reentrant call");
+        locked = true;
+        _;
+        locked = false;
     }
 
     // 单个购买彩票信息：用户地址 + 购买数量
@@ -84,7 +93,7 @@ contract Lottery3D {
     }
 
     // 管理员开奖并发放奖金
-    function draw(uint256 round, uint256 winningNumber) external onlyOwner {
+    function draw(uint256 round, uint256 winningNumber) external onlyOwner nonReentrant {
         require(rounds[round].isOpen, "Round not open");
         require(!rounds[round].isDrawn, "Already drawn");
         require(block.timestamp > rounds[round].deadline, "Round not ended");
@@ -103,7 +112,8 @@ contract Lottery3D {
         // 发放奖金
         for (uint i = 0; i < winners.length; i++) {
             uint256 totalPrize = winners[i].amount * prizePerTicket;
-            payable(winners[i].buyer).transfer(totalPrize);
+            (bool success, ) = payable(winners[i].buyer).call{value: totalPrize}("");
+            require(success, "Prize transfer failed");
             emit PrizeDistributed(winners[i].buyer, round, totalPrize);
         }
     }
