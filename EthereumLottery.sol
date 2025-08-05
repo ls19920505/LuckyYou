@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
+/// @custom:dev-run-script scripts/deploy.js
 contract Lottery3D {
     // 管理员地址
     address public owner;
