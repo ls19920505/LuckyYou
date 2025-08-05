@@ -1,0 +1,17 @@
+{
+  "name": "luckyyou",
+  "version": "1.0.0",
+  "description": "项目背景 以太坊彩票系统旨在利用区块链技术实现去中心化、透明、公平的数字彩票游戏。通过智能合约实现全自动化的投注、开奖和奖金分配。此项目将借鉴排列三玩法，为用户提供一个简单而有效的彩票体验。",
+  "main": "index.js",
+  "scripts": {
+    "test": "hardhat test"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "hardhat": "^2.20.0",
+    "@nomicfoundation/hardhat-toolbox": "^3.1.0"
+  }
+}
